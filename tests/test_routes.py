@@ -179,6 +179,14 @@ class TestProductRoutes(TestCase):
         response = self.client.get(f"{BASE_URL}/{1234}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_get_product_list(self):
+        """It should Get a list of Products"""
+        self._create_products(5)
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 5)
+
     # ----------------------------------------------------------
     # TEST UPDATE
     # ----------------------------------------------------------
