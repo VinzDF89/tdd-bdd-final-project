@@ -124,7 +124,7 @@ class TestProductModel(unittest.TestCase):
         product.description = "testing"
         original_id = product.id
         product.id = None
-        with self.assertRaises(DataValidationError) as context:
+        with self.assertRaises(DataValidationError):
             product.update()
         product.id = original_id
         product.update()
@@ -208,27 +208,27 @@ class TestProductModel(unittest.TestCase):
     def test_serialization_deserialization(self):
         """It should serialize and deserialize Product objects correctly"""
         product = ProductFactory()
-        productDict = product.serialize()
+        product_dict = product.serialize()
 
-        self.assertEqual(product.id, productDict["id"])
-        self.assertEqual(product.name, productDict["name"])
-        self.assertEqual(product.description, productDict["description"])
-        self.assertEqual(product.available, productDict["available"])
-        self.assertEqual(product.category.name, productDict["category"])
+        self.assertEqual(product.id, product_dict["id"])
+        self.assertEqual(product.name, product_dict["name"])
+        self.assertEqual(product.description, product_dict["description"])
+        self.assertEqual(product.available, product_dict["available"])
+        self.assertEqual(product.category.name, product_dict["category"])
 
-        productDict["available"] = "test_string_error"
-        with self.assertRaises(DataValidationError) as context:
-            product.deserialize(productDict)
-        productDict["available"] = product.available
+        product_dict["available"] = "test_string_error"
+        with self.assertRaises(DataValidationError):
+            product.deserialize(product_dict)
+        product_dict["available"] = product.available
 
-        productDict["category"] = "dog"
-        with self.assertRaises(DataValidationError) as context:
-            product.deserialize(productDict)
-        productDict["category"] = product.category.name
+        product_dict["category"] = "dog"
+        with self.assertRaises(DataValidationError):
+            product.deserialize(product_dict)
+        product_dict["category"] = product.category.name
 
-        product.deserialize(productDict)
-        self.assertEqual(product.id, productDict["id"])
-        self.assertEqual(product.name, productDict["name"])
-        self.assertEqual(product.description, productDict["description"])
-        self.assertEqual(product.available, productDict["available"])
-        self.assertEqual(product.category.name, productDict["category"])
+        product.deserialize(product_dict)
+        self.assertEqual(product.id, product_dict["id"])
+        self.assertEqual(product.name, product_dict["name"])
+        self.assertEqual(product.description, product_dict["description"])
+        self.assertEqual(product.available, product_dict["available"])
+        self.assertEqual(product.category.name, product_dict["category"])
